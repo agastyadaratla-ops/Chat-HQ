@@ -15,7 +15,7 @@ const filter = new Filter();
 
 const adminUser = "Admin";
 let adminPassword = "supersecret"; // CHANGE THIS
-let chatPassword = "mypassword";   // CHANGE THIS
+let chatPassword = "thermodynamics";   // CHANGE THIS
 
 let activeUsers = {};
 let lockedUsernames = new Set();
