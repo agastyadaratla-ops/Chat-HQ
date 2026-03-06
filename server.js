@@ -14,31 +14,50 @@ const io = new Server(server, { cors: { origin: "*" } });
 const filter = new Filter();
 
 const adminUser = "Admin";
-let adminPassword = "supersecret"; // CHANGE THIS
-let chatPassword = "thermodynamics";   // CHANGE THIS
+let adminPassword = "supersecret"; 
+let chatPassword = "thermodynamics";
 
 let activeUsers = {};
 let lockedUsernames = new Set();
 let hardBlockWords = ["verybadword1", "verybadword2"];
 let currentSessions = new Set();
 
+/* HARD BLOCK CHECK */
 function containsHardBlock(msg) {
   return hardBlockWords.some(word => msg.toLowerCase().includes(word));
 }
 
+/* BROADCAST USER LIST */
+function updateUserList() {
+  io.emit("user list", Object.values(activeUsers));
+}
+
 io.on("connection", (socket) => {
 
+  /* PASSWORD CHECK */
+
   socket.on("enter password", (password, callback) => {
+
     if (password === chatPassword || password === adminPassword) {
+
       currentSessions.add(socket.id);
+
       const isAdmin = (password === adminPassword);
+
       callback({ success: true, isAdmin });
+
     } else {
+
       callback({ success: false });
+
     }
+
   });
 
+  /* USERNAME SET */
+
   socket.on("set username", (username, callback) => {
+
     if (!currentSessions.has(socket.id))
       return callback({ success: false, message: "Not authorized" });
 
@@ -54,25 +73,38 @@ io.on("connection", (socket) => {
     lockedUsernames.add(username);
     activeUsers[socket.id] = username;
 
-    io.emit("online users", Object.values(activeUsers));
+    updateUserList();
+
     callback({ success: true });
+
   });
 
+  /* CHAT MESSAGE */
+
   socket.on("chat message", (msg) => {
+
     if (!currentSessions.has(socket.id)) return;
+
     const username = activeUsers[socket.id];
     if (!username) return;
 
     if (containsHardBlock(msg)) {
+
       socket.emit("message blocked", "Message blocked due to prohibited language.");
       return;
+
     }
 
     msg = filter.clean(msg);
+
     io.emit("chat message", { username, message: msg });
+
   });
 
+  /* ADMIN PASSWORD CHANGE */
+
   socket.on("change chat password", (newPassword, adminSocketId, callback) => {
+
     if (adminSocketId !== socket.id)
       return callback({ success: false, message: "Not authorized" });
 
@@ -80,17 +112,30 @@ io.on("connection", (socket) => {
       return callback({ success: false, message: "Password too short" });
 
     chatPassword = newPassword;
+
     callback({ success: true, message: "Chat password updated" });
+
   });
 
+  /* USER DISCONNECT */
+
   socket.on("disconnect", () => {
+
     const username = activeUsers[socket.id];
-    if (username) lockedUsernames.delete(username);
+
+    if (username) {
+      lockedUsernames.delete(username);
+    }
+
     delete activeUsers[socket.id];
     currentSessions.delete(socket.id);
-    io.emit("online users", Object.values(activeUsers));
+
+    updateUserList();
+
   });
+
 });
 
 const PORT = process.env.PORT || 3000;
+
 server.listen(PORT, () => console.log("Server running on port " + PORT));
