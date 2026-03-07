@@ -15,12 +15,12 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static('public'));
 
 // ─── CONFIG (edit these directly) ────────────────────────────
-const MONGO_URI  = 'mongodb+srv://YOUR_USER:YOUR_PASS@cluster.mongodb.net/chathq';
+const MONGO_URI  = 'mongodb+srv://agastyadaratla_db_user:Daratla1903@chat-hq.rgmime9.mongodb.net/?appName=Chat-HQ';
 const PORT       = 3000;
 
 // These can be changed live via the admin panel
-let GENERAL_PASS = 'chat123';
-let ADMIN_PASS   = 'admin999';
+let GENERAL_PASS = 'thermodynamics';
+let ADMIN_PASS   = '6e4LFq#Z';
 
 // ─── BAD WORD FILTER ──────────────────────────────────────────
 // Add or remove words from this list freely
