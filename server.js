@@ -7,8 +7,10 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: '*', methods: ['GET', 'POST'] }
+  cors: { origin: 'https://agastyadaratla-ops.github.io', methods: ['GET', 'POST'] }
 });
+
+app.use(cors({ origin: 'https://agastyadaratla-ops.github.io' }));
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
