@@ -1,17 +1,15 @@
 {
   "name": "chathq-backend",
   "version": "2.0.0",
-  "description": "ChatHQ backend with MongoDB, Socket.io, admin panel",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mongoose": "^8.0.0",
-    "multer": "^1.4.5-lts.1",
     "socket.io": "^4.6.1"
   },
   "devDependencies": {
