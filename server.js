@@ -17,7 +17,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static('public'));
 
 // ─── CONFIG (edit these directly) ────────────────────────────
-const MONGO_URI  = 'mongodb+srv://agastyadaratla_db_user:Daratla1903@chat-hq.rgmime9.mongodb.net/?appName=Chat-HQ';
+const MONGO_URI  = 'mongodb+srv://agastyadaratla_db_user:chat123@chat-hq.rgmime9.mongodb.net/?appName=Chat-HQ';
 const PORT       = 3000;
 
 // These can be changed live via the admin panel
